@@ -1,0 +1,4 @@
+databaseChangeLog:
+        - include:
+                  file: changesets/001-init.sql
+                  relativeToChangelogFile: true

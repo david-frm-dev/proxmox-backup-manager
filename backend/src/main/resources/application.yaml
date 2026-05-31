@@ -1,3 +1,21 @@
 spring:
   application:
     name: backend
+
+  liquibase:
+    enabled: false
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: "${POSTGRES_PASSWORD}"
+    username: "${POSTGRES_USER}"
+    url: "jdbc:postgresql://localhost:5432/pbm"
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+springdotenv:
+  enabled: true
+  filename: .env

@@ -16,6 +16,7 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -30,6 +31,8 @@ dependencies {
 
     // OpenAPI (Spec + Swagger-UI, Basis für FE-Generierung)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+    implementation 'me.paulschwarz:springboot3-dotenv:5.1.0'
 
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'

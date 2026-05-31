@@ -2,7 +2,13 @@
   "name": "@frontend/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "npx nx run frontend:build:production",
+    "serve:dev": "npx nx run frontend:serve:development",
+    "serve:prd": "npx nx run frontend:serve:production",
+    "serve": "npm run serve:dev",
+    "api": "npx openapi-generator-cli generate   -i http://localhost:8080/v3/api-docs   -g typescript-angular   -o ../frontend/lib/src/   --additional-properties=providedInRoot=true   --remove-operation-id-prefix"
+  },
   "private": true,
   "dependencies": {
     "@angular/common": "~19.2.0",
@@ -12,6 +18,7 @@
     "@angular/platform-browser": "~19.2.0",
     "@angular/platform-browser-dynamic": "~19.2.0",
     "@angular/router": "~19.2.0",
+    "@openapitools/openapi-generator-cli": "^2.34.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
   },

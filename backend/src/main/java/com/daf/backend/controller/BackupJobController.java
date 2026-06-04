@@ -2,6 +2,8 @@ package com.daf.backend.controller;
 
 import com.daf.backend.model.BackupJob;
 import com.daf.backend.model.BackupJobDto;
+import com.daf.backend.model.BackupType;
+import com.daf.backend.service.BackupExecutor;
 import com.daf.backend.service.BackupJobService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BackupJobController {
     private final BackupJobService service;
+    private final BackupExecutor executor;
 
     @GetMapping
     public ResponseEntity<List<BackupJob>> findAll() {
@@ -38,6 +41,14 @@ public class BackupJobController {
     public ResponseEntity<BackupJob> update(@PathVariable UUID id, @RequestBody BackupJobDto dto) {
         BackupJob target = service.update(id, dto);
         return ResponseEntity.ok().body(target);
+    }
+
+    @PostMapping("/{id}/run")
+    public ResponseEntity<?> run(@PathVariable UUID id, @RequestParam(defaultValue = "GUEST") BackupType backupType
+    ) {
+        BackupJob job = service.findById(id);
+        executor.execute(job, backupType);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

@@ -23,7 +23,7 @@ services:
     image: liquibase/liquibase:4.31
     command:
       - --searchPath=/liquibase/changelog
-      - --changelog-file=db.changelog-master.yaml
+      - --changelog-file=db.changelog-master.xml
       - --url=jdbc:postgresql://postgres:5432/pbm
       - --username=${POSTGRES_USER}
       - --password=${POSTGRES_PASSWORD}
@@ -33,6 +33,12 @@ services:
     depends_on:
       postgres: { condition: service_healthy }
     restart: "no"
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
 
   frontend:
     hostname: frontend-frontend
@@ -55,15 +61,17 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
       PBM_JWT_SECREAT: ${PBM_JWT_SECRET}
 
     depends_on:
       postgres: { condition: service_healthy }
       liquibase: { condition: service_completed_successfully }
+      redis: { condition: service_started }
     restart: unless-stopped
     ports:
       - "8080:8080"
 
-
 volumes:
   postgres_data_pbm:
+  redisdata:

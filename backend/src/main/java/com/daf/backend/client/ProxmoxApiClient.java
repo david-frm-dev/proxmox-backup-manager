@@ -1,6 +1,7 @@
 package com.daf.backend.client;
 
 import com.daf.backend.dto.NodeDto;
+import com.daf.backend.model.BackupCompression;
 import com.daf.backend.model.ProxmoxConnection;
 import com.daf.backend.repository.ProxmoxConnectionRepository;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,12 @@ public class ProxmoxApiClient {
                 .baseUrl(proxmox.getBaseUrl() + "/api2/json")
                 .defaultHeader(HttpHeaders.AUTHORIZATION, key)
                 .build();
+    }
+
+    public Integer startVzdump(String node, int vmid, BackupCompression compression) {
+        return buildConnection()
+                .get()
+                .uri("/nodes/{node}/vmid")
     }
 
     public List<NodeDto> listNodes() {

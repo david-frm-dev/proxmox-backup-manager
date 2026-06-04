@@ -47,7 +47,7 @@ public class BackupTargetService {
         target.setHost(dto.getHost());
         target.setPort(dto.getPort());
         target.setUsername(dto.getUsername());
-        target.setCredentialsEnc(dto.getCredentials().getBytes(StandardCharsets.UTF_8));
+        target.setCredentialsEnc(dto.getCredentials() != null ? dto.getCredentials().getBytes(StandardCharsets.UTF_8) : null);
         target.setBasePath(dto.getBasePath());
         return target;
     }

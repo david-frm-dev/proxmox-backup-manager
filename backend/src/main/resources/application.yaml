@@ -16,6 +16,11 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: 6379
+
 springdotenv:
   enabled: true
   filename: .env

@@ -16,7 +16,9 @@ public class ProxmoxConnectionService {
             String baseUrl,
             String tokenId,
             String tokenSecret,
-            boolean verifyTls
+            boolean verifyTls,
+            String sshUser,
+            String sshKey
     ) {}
 
     public ProxmoxConnection save(ProxmoxConnectionRequest proxmoxConnectionRequest) {
@@ -28,6 +30,8 @@ public class ProxmoxConnectionService {
         proxConnection.setTokenId(proxmoxConnectionRequest.tokenId());
         proxConnection.setTokenSecretEnc(proxmoxConnectionRequest.tokenSecret().getBytes());
         proxConnection.setVerifyTls(proxmoxConnectionRequest.verifyTls());
+        proxConnection.setSshUser(proxmoxConnectionRequest.sshUser());
+        proxConnection.setSshKeyEnc(proxmoxConnectionRequest.sshKey().getBytes());
 
         if (proxConnection.getCreatedAt() == null) {
             proxConnection.setCreatedAt(new Timestamp(System.currentTimeMillis()));

@@ -29,4 +29,9 @@ public class ProxmoxConnection {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @Column(name = "ssh_user")
+    private String sshUser;
+
+    @Column(name = "ssh_key_enc")
+    private byte[] sshKeyEnc;
 }

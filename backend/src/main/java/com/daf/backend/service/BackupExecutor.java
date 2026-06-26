@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 
 @Service
@@ -19,6 +21,14 @@ public class BackupExecutor {
     private final BackupRecordService recordService;
     private final ProxmoxApiClient apiClient;
     private final TransferService transferService;
+    private final EncryptionService encryptionService;
+
+    /**
+     * The methode execute, executes the BackupJob for Proxmox. It is the core methode for backuping everything without scheduling.
+     *
+     * @param job that's being executed
+     * @param type defines which platform should be backuped
+     */
 
     public void execute (BackupJob job, BackupType type) {
         BackupRecord record = new BackupRecord();
@@ -39,8 +49,6 @@ public class BackupExecutor {
         recordService.save(record);
 
         try {
-            // vzdump starten → kommt später
-            // download → encrypt → upload → kommt später
             String upid = apiClient.startVzdump(job.getNode(), job.getVmid(), job.getCompression());
             ProxmoxApiClient.TaskStatusDto status;
 
@@ -64,7 +72,11 @@ public class BackupExecutor {
 
             try (InputStream backupStream = transferService.downloadFromProxmox(path)) {
                 // encrypt + upload kommt hier
-
+                Path encrypted = Files.createTempFile("pbm-", ".enc");
+                String[] hashes = encryptionService.encryptToFile(backupStream, encrypted);
+                record.setSha256Orig(hashes[0]);
+                record.setSha256Enc(hashes[1]);
+                record.setSizeBytes(Files.size(encrypted));
             }
 
             record.setStatus(BackupStatus.SUCCESS);

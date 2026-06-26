@@ -17,6 +17,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private JWTService jwtService;
 
+    /**
+     * The methode register registers a User.
+     *
+     * @param username Username of user that wants to register
+     * @param email E-Mail of user that wants to register
+     * @param password Password of user that wants to register
+     *
+     * @return JWT - JWT is used for every request (except methods: register, login)
+     * */
+
     public String register(String username, String password, String email) {
         User newUser = new User();
 
@@ -33,6 +43,14 @@ public class AuthService {
         return jwtService.generate(username, role.toString());
     }
 
+    /**
+     * The methode login, signs the user in.
+     *
+     * @param username Username is used to find the current user
+     * @param password Password is used to validate the current user
+     *
+     * @return JWT - JWT is used for every request (except methods: register, login)
+     * */
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));

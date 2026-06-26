@@ -17,6 +17,11 @@ public class NodeDiscoveryService {
     private final ProxmoxApiClient proxmoxApiClient;
     private final NodeRepository nodeRepository;
 
+    /**
+     * Finds every node/qemu/lxc and returns it
+     *
+     * @return a list of {@link Node}
+     * */
     public List<Node> discoverNodes() {
         List<NodeDto> nodes = proxmoxApiClient.listNodes();
 

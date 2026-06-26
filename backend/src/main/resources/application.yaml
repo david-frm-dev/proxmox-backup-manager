@@ -26,5 +26,6 @@ springdotenv:
   filename: .env
 
 pbm:
+  master-key: ${PBM_MASTER_KEY}
   jwt:
     secret: "${PBM_JWT_SECRET}"

@@ -126,4 +126,13 @@ public class ProxmoxApiClient {
                 .data()
                 .path();
     }
+
+    public void deleteBackup (String node, String storage, String volid) {
+        buildConnection()
+                .delete()
+                .uri("/nodes/{node}/storage/{storage}/content/{volid}", node, storage, volid)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
 }

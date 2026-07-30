@@ -3,10 +3,7 @@ package com.daf.backend.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -86,5 +83,27 @@ public class EncryptionService {
         }
     }
 
+    public void decryptToFile(InputStream input, Path output) {
+        try {
+            byte[] salt = input.readNBytes(SALT_LEN);
+            byte[] iv   = input.readNBytes(IV_LEN);
+
+            if (salt.length < SALT_LEN || iv.length < IV_LEN) {
+                throw new IllegalStateException("Datei zu kurz — kein gültiger Header");
+            }
+
+            SecretKey key = deriveKey(salt);
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(TAG_BITS, iv));
+
+            try (CipherInputStream cipherIn = new CipherInputStream(input, cipher);
+                 OutputStream out = Files.newOutputStream(output)) {
+                cipherIn.transferTo(out);
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            throw new IllegalStateException("Entschlüsselung fehlgeschlagen", e);
+        }
+    }
 }
 

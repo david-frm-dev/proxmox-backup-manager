@@ -1,5 +1,6 @@
-package com.daf.backend.model;
+package com.daf.backend.dto;
 
+import com.daf.backend.model.TargetType;
 import lombok.Data;
 
 @Data

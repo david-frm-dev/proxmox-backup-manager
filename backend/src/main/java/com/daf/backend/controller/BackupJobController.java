@@ -1,7 +1,7 @@
 package com.daf.backend.controller;
 
 import com.daf.backend.model.BackupJob;
-import com.daf.backend.model.BackupJobDto;
+import com.daf.backend.dto.BackupJobDto;
 import com.daf.backend.model.BackupType;
 import com.daf.backend.service.BackupExecutor;
 import com.daf.backend.service.BackupJobService;

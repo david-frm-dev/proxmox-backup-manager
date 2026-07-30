@@ -1,7 +1,7 @@
 package com.daf.backend.controller;
 
 import com.daf.backend.model.BackupTarget;
-import com.daf.backend.model.BackupTargetDto;
+import com.daf.backend.dto.BackupTargetDto;
 import com.daf.backend.service.BackupTargetService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

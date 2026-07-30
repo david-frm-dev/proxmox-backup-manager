@@ -34,4 +34,10 @@ public class ProxmoxConnection {
 
     @Column(name = "ssh_key_enc")
     private byte[] sshKeyEnc;
+
+    @Column(name = "ssh_ip_address")
+    private String sshIpAddress;
+
+    @Column(name = "ssh_port")
+    private Integer sshPort;
 }

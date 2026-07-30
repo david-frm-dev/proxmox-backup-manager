@@ -18,9 +18,16 @@ public class ProxmoxConnectionService {
             String tokenSecret,
             boolean verifyTls,
             String sshUser,
-            String sshKey
+            String sshKey,
+            String sshIpAddress,
+            Integer sshPort
     ) {}
 
+    /**
+     * Saves the ProxmoxConnection in database
+     *
+     * @param proxmoxConnectionRequest the connection that's valid is stored
+     * */
     public ProxmoxConnection save(ProxmoxConnectionRequest proxmoxConnectionRequest) {
         ProxmoxConnection proxConnection = proxmoxConnectionRepository
                 .findFirstBy()
@@ -32,6 +39,8 @@ public class ProxmoxConnectionService {
         proxConnection.setVerifyTls(proxmoxConnectionRequest.verifyTls());
         proxConnection.setSshUser(proxmoxConnectionRequest.sshUser());
         proxConnection.setSshKeyEnc(proxmoxConnectionRequest.sshKey().getBytes());
+        proxConnection.setSshIpAddress(proxmoxConnectionRequest.sshIpAddress());
+        proxConnection.setSshPort(proxmoxConnectionRequest.sshPort());
 
         if (proxConnection.getCreatedAt() == null) {
             proxConnection.setCreatedAt(new Timestamp(System.currentTimeMillis()));

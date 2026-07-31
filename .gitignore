@@ -1,3 +1,4 @@
 .idea
 *.env
 sftp-data
+.DS_Store

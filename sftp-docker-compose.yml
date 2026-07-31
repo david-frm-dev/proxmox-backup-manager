@@ -4,7 +4,7 @@ services:
     container_name: sftp-test
     ports:
       - "2223:22"
-    command: david:test123:::upload
+    command: david:test123:1000:1000:upload
     volumes:
-      - ./sftp-data:/home/david/upload
+        - ./sftp-data:/home/david/upload
     restart: unless-stopped

@@ -18,6 +18,7 @@ public class BackupJobDto {
     private BackupCompression compression;
     private DumpMode mode;
     private boolean encrypted;
+    private String storage;
     private Integer retentionCount;
     private boolean removeAfter;
     private UUID targetId;

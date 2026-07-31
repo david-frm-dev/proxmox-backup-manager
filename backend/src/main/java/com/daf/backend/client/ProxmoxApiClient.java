@@ -4,6 +4,7 @@ import com.daf.backend.dto.NodeDto;
 import com.daf.backend.model.BackupCompression;
 import com.daf.backend.model.ProxmoxConnection;
 import com.daf.backend.repository.ProxmoxConnectionRepository;
+import jakarta.servlet.http.WebConnection;
 import lombok.AllArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -42,11 +43,13 @@ public class ProxmoxApiClient {
                 .build();
     }
 
-    public String startVzdump(String node, int vmid, BackupCompression compression) {
+    public String startVzdump(String node, int vmid, BackupCompression compression, String storage) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
         body.add("vmid", String.valueOf(vmid));
         body.add("compress", compression.name().toLowerCase());
+        body.add("storage", storage);
+
 
         return buildConnection()
                 .post()

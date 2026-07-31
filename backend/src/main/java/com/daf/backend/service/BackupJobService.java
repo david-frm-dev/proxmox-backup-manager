@@ -59,6 +59,7 @@ public class BackupJobService implements Service_I<BackupJob, BackupJobDto> {
         job.setCompression(dto.getCompression());
         job.setMode(dto.getMode());
         job.setEncrypted(dto.isEncrypted());
+        job.setStorage(dto.getStorage());
         job.setRetentionCount(dto.getRetentionCount());
         job.setRemoveAfter(dto.isRemoveAfter());
         job.setEnabled(dto.isEnabled());

@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
+import java.util.Arrays;
 import java.util.HexFormat;
 // AES 256 ENCRYPTION SERVICE
 
@@ -20,14 +21,14 @@ import java.util.HexFormat;
 public class EncryptionService {
     private final String masterKey;
 
-    private static final String KDF_ALGO   = "PBKDF2WithHmacSHA256";
+    private static final String KDF_ALGO = "PBKDF2WithHmacSHA256";
     private static final int ITERATIONS = 210_000;
-    private static final int SALT_LEN   = 16;
-    private static final int IV_LEN     = 12;
-    private static final int TAG_BITS   = 128;
-    private static final int KEY_BITS   = 256;
+    private static final int SALT_LEN = 16;
+    private static final int IV_LEN = 12;
+    private static final int TAG_BITS = 128;
+    private static final int KEY_BITS = 256;
 
-    public  EncryptionService(@Value("${pbm.master-key}") String masterKey) {
+    public EncryptionService(@Value("${pbm.master-key}") String masterKey) {
         if (masterKey == null || masterKey.isEmpty()) {
             throw new IllegalArgumentException("MasterKey is null or empty");
         }
@@ -49,7 +50,7 @@ public class EncryptionService {
     public String[] encryptToFile(InputStream input, Path output) {   // gibt {orig, enc} zurück
         try {
             byte[] salt = new byte[SALT_LEN];
-            byte[] iv   = new byte[IV_LEN];
+            byte[] iv = new byte[IV_LEN];
             SecureRandom random = new SecureRandom();
             random.nextBytes(salt);
             random.nextBytes(iv);
@@ -60,7 +61,7 @@ public class EncryptionService {
             cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(TAG_BITS, iv));
 
             MessageDigest shaOrig = MessageDigest.getInstance("SHA-256");  // Klartext
-            MessageDigest shaEnc  = MessageDigest.getInstance("SHA-256");  // Ciphertext
+            MessageDigest shaEnc = MessageDigest.getInstance("SHA-256");  // Ciphertext
 
             DigestInputStream in = new DigestInputStream(input, shaOrig);
             try (OutputStream out = Files.newOutputStream(output)) {
@@ -79,17 +80,17 @@ public class EncryptionService {
             };
 
         } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Verschlüsselung fehlgeschlagen", e);
+            throw new IllegalStateException("Encryption failed", e);
         }
     }
 
     public void decryptToFile(InputStream input, Path output) {
         try {
             byte[] salt = input.readNBytes(SALT_LEN);
-            byte[] iv   = input.readNBytes(IV_LEN);
+            byte[] iv = input.readNBytes(IV_LEN);
 
             if (salt.length < SALT_LEN || iv.length < IV_LEN) {
-                throw new IllegalStateException("Datei zu kurz — kein gültiger Header");
+                throw new IllegalStateException("No valid header found");
             }
 
             SecretKey key = deriveKey(salt);
@@ -102,7 +103,54 @@ public class EncryptionService {
                 cipherIn.transferTo(out);
             }
         } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Entschlüsselung fehlgeschlagen", e);
+            throw new IllegalStateException("Decryption failed", e);
+        }
+    }
+
+    public byte[] encryptBytes(byte[] plain) {
+        try {
+            byte[] salt = new byte[SALT_LEN];
+            byte[] iv = new byte[IV_LEN];
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(salt);
+            random.nextBytes(iv);
+
+            SecretKey key = deriveKey(salt);
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(TAG_BITS, iv));
+
+            byte[] cipherText = cipher.doFinal(plain);
+
+            byte[] result = new byte[SALT_LEN + IV_LEN + cipherText.length];
+            System.arraycopy(salt, 0, result, 0, SALT_LEN);
+            System.arraycopy(iv, 0, result, SALT_LEN, IV_LEN);
+            System.arraycopy(cipherText, 0, result, SALT_LEN + IV_LEN, cipherText.length);
+
+            return result;
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException("Encryption failed", e);
+        }
+    }
+
+    public byte[] decryptBytes(byte[] enc) {
+        try {
+            if (enc.length < SALT_LEN + IV_LEN) {
+                throw new IllegalStateException("No valid header");
+            }
+
+            byte[] salt = Arrays.copyOfRange(enc, 0, SALT_LEN);
+            byte[] iv = Arrays.copyOfRange(enc, SALT_LEN, SALT_LEN + IV_LEN);
+            byte[] cipherText = Arrays.copyOfRange(enc, SALT_LEN + IV_LEN, enc.length);
+
+            SecretKey key = deriveKey(salt);
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(TAG_BITS, iv));
+
+            return cipher.doFinal(cipherText);
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException("Decryption Failed", e);
         }
     }
 }

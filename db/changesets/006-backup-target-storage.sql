@@ -1,0 +1,2 @@
+ALTER TABLE backup_jobs
+ADD COLUMN storage VARCHAR(64) NOT NULL DEFAULT 'local';

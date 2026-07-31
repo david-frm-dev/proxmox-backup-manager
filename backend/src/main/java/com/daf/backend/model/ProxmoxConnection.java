@@ -1,5 +1,6 @@
 package com.daf.backend.model;
 
+import com.daf.backend.converter.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,13 +15,14 @@ public class ProxmoxConnection {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "base_url", length = 255, nullable = false)
+    @Column(name = "base_url", nullable = false)
     private String baseUrl;
 
-    @Column(name = "token_id", length = 255, nullable = false)
+    @Column(name = "token_id", nullable = false)
     private String tokenId;
 
-    @Column(name = "token_secret_enc", length = 255, nullable = false)
+    @Convert(converter = CryptoConverter.class)
+    @Column(name = "token_secret_enc", nullable = false)
     private byte[] tokenSecretEnc;
 
     @Column(name = "verify_tls", nullable = false)
@@ -32,6 +34,7 @@ public class ProxmoxConnection {
     @Column(name = "ssh_user")
     private String sshUser;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "ssh_key_enc")
     private byte[] sshKeyEnc;
 

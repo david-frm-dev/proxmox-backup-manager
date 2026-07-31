@@ -51,7 +51,7 @@ public class BackupExecutor {
         recordService.save(record);
 
         try {
-            String upid = apiClient.startVzdump(job.getNode(), job.getVmid(), job.getCompression());
+            String upid = apiClient.startVzdump(job.getNode(), job.getVmid(), job.getCompression(), job.getStorage());
             ProxmoxApiClient.TaskStatusDto status;
 
             log.info("VZDUMP STARTED WITH: {}", upid);
@@ -65,13 +65,12 @@ public class BackupExecutor {
                 throw new RuntimeException("vzdump fehlgeschlagen: " + status.exitstatus());
             }
 
-            //TODO: STORAGE INTEGRATION WITH NOT LOCAL
-            String volid = apiClient.findLatestVolid(job.getNode(), "local", job.getVmid());
+            String volid = apiClient.findLatestVolid(job.getNode(), job.getStorage(), job.getVmid());
             String fileEnding = job.isEncrypted() ? ".enc" : "";
             record.setFilename(volid.substring(volid.lastIndexOf('/') + 1) + fileEnding);
             log.info(volid);
 
-            String path = apiClient.getVolidPath(job.getNode(), "local", volid);
+            String path = apiClient.getVolidPath(job.getNode(), job.getStorage(), volid);
 
             try (InputStream backupStream = transferService.downloadFromProxmox(path)) {
                 Path tempFile = Files.createTempFile("pbm-", job.isEncrypted() ? ".enc" : ".tmp");
@@ -88,7 +87,8 @@ public class BackupExecutor {
                 }
 
                 record.setSizeBytes(Files.size(tempFile));
-                record.setRemotePath(transferService.uploadToTarget(target, tempFile, record.getFilename()));
+                record.setRemotePath(transferService.uploadToTarget(target, tempFile, record.getFilename(), job.getNode(), job.getVmid()));
+                transferService.writeManifest(target, record);
                 Files.deleteIfExists(tempFile);
             }
 
@@ -98,7 +98,7 @@ public class BackupExecutor {
 
             if (job.isRemoveAfter()) {
                 try {
-                    apiClient.deleteBackup(job.getNode(), "local", volid);
+                    apiClient.deleteBackup(job.getNode(), job.getStorage(), volid);
                 } catch (Exception e) {
                     log.warn(e.getMessage());
                 }

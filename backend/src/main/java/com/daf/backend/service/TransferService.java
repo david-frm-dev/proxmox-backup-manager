@@ -14,11 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Date;
-import java.sql.Timestamp;
 
 @Slf4j
 @Service
@@ -65,7 +64,7 @@ public class TransferService {
      * @throws SftpException when JSch can't put or has JSch has other problems with connecting to target destination
      *
      */
-    public String uploadToTarget(BackupTarget target, Path localFile, String fileName) throws Exception {
+    public String uploadToTarget(BackupTarget target, Path localFile, String fileName, String node, int vmid) throws Exception {
         JSch jsch = new JSch();
         Session session = jsch.getSession(target.getUsername(), target.getHost(), target.getPort());
         session.setPassword(target.getCredentialsEnc());
@@ -75,7 +74,10 @@ public class TransferService {
         ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
         sftp.connect();
 
-        String remotePath = target.getBasePath() + "/" + fileName;
+        String remoteDir = target.getBasePath() + "/" + node + "/" + vmid;
+        ensureDirectory(sftp, remoteDir);
+
+        String remotePath = remoteDir + "/" + fileName;
 
         try (InputStream in = Files.newInputStream(localFile)) {
             sftp.put(in, remotePath);
@@ -101,8 +103,41 @@ public class TransferService {
         ObjectMapper mapper = new ObjectMapper();
         byte[] valueAsBytes = mapper.writeValueAsBytes(manifest);
 
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(target.getUsername(), target.getHost(), target.getPort());
+        session.setPassword(target.getCredentialsEnc());
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(10_000);
 
+        ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
+        sftp.connect();
 
+        String remoteDir = target.getBasePath() + "/" + record.getNode() + "/" + record.getVmid();
+        ensureDirectory(sftp, remoteDir);
 
+        String remotePath = remoteDir + "/" + record.getFilename() + ".manifest.json";
+
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes)) {
+            sftp.put(bais, remotePath);
+        } finally {
+            sftp.disconnect();
+            session.disconnect();
+        }
+    }
+
+    private void ensureDirectory(ChannelSftp sftp, String directoryPath) throws SftpException {
+        String[] path = directoryPath.split("/");
+        String currentPath = "";
+
+        for (String p : path) {
+            if (p.isEmpty()) continue;
+            currentPath += "/" + p;
+
+            try {
+                sftp.stat(currentPath);
+            } catch (SftpException _) {
+                sftp.mkdir(currentPath);
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ services:
     command:
       - --searchPath=/liquibase/changelog
       - --changelog-file=db.changelog-master.xml
-      - --url=jdbc:postgresql://postgres:5432/pbm
+      - --url=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       - --username=${POSTGRES_USER}
       - --password=${POSTGRES_PASSWORD}
       - update

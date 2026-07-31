@@ -1,5 +1,6 @@
 package com.daf.backend.model;
 
+import com.daf.backend.converter.CryptoConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class BackupTarget {
     private String username;
 
     @JsonIgnore
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "credentials_enc")
     private byte[] credentialsEnc;
 

@@ -63,6 +63,9 @@ public class BackupJob {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "storage", length = 64, nullable = false)
+    private String storage;
+
     @Column(name = "last_run_at")
     private Timestamp lastRunAt;
 

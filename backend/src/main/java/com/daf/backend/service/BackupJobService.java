@@ -6,6 +6,7 @@ import com.daf.backend.dto.BackupJobDto;
 import com.daf.backend.repository.BackupJobRepository;
 import com.daf.backend.repository.BackupTargetRepository;
 import com.daf.backend.repository.UserRepository;
+import com.daf.backend.scheduler.JobScheduler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,11 @@ public class BackupJobService implements Service_I<BackupJob, BackupJobDto> {
     private final BackupJobRepository backupJobRepository;
     private final UserRepository userRepository;
     private final BackupTargetRepository backupTargetRepository;
+    private final JobScheduler jobScheduler;
 
     @Override
     public List<BackupJob> findAll() {
-        return backupJobRepository.findAll()    ;
+        return backupJobRepository.findAll();
     }
 
     @Override
@@ -34,18 +36,23 @@ public class BackupJobService implements Service_I<BackupJob, BackupJobDto> {
         BackupJob target = toEntity(new BackupJob(), dto);
         target.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-        return backupJobRepository.save(target);
+        BackupJob returnVal = backupJobRepository.save(target);
+        jobScheduler.schedule(returnVal);
+        return returnVal;
     }
 
     @Override
     public BackupJob update(UUID id, BackupJobDto dto) {
         BackupJob target = backupJobRepository.findById(id).orElseThrow();
-        return backupJobRepository.save(toEntity(target, dto));
+        BackupJob returnVal = backupJobRepository.save(toEntity(target, dto));
+        jobScheduler.schedule(returnVal);
+        return returnVal;
     }
 
     @Override
     public void delete(UUID id) {
         backupJobRepository.deleteById(id);
+        jobScheduler.cancel(id);
     }
 
     private BackupJob toEntity(BackupJob job, BackupJobDto dto) {

@@ -125,6 +125,26 @@ public class TransferService {
         }
     }
 
+
+    public void deleteFromTarget(BackupTarget target, String remotePath) throws Exception {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(target.getUsername(), target.getHost(), target.getPort());
+        session.setPassword(target.getCredentialsEnc());
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(10_000);
+
+        ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
+        sftp.connect();
+
+        try {
+            sftp.rm(remotePath);
+        } finally {
+            sftp.disconnect();
+            session.disconnect();
+        }
+    }
+
+
     private void ensureDirectory(ChannelSftp sftp, String directoryPath) throws SftpException {
         String[] path = directoryPath.split("/");
         String currentPath = "";

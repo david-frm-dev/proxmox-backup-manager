@@ -10,5 +10,5 @@ import java.util.UUID;
 
 public interface BackupRecordRepository extends JpaRepository<BackupRecord, UUID> {
     Optional<BackupRecord> findByJobId(UUID jobId);
-    List<BackupRecord> findByJobIdAndStatusOrderByStartedAtDesc(UUID job_id, BackupStatus status);
+        List<BackupRecord> findByJobIdAndStatusOrderByStartedAtDesc(UUID job_id, BackupStatus status);
 }

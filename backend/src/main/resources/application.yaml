@@ -1,7 +1,7 @@
 spring:
   application:
     version: 0.1.0
-    name: proxmox-backup-manager-backend
+    name: backend
 
   datasource:
     driver-class-name: org.postgresql.Driver

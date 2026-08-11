@@ -144,6 +144,18 @@ public class TransferService {
         }
     }
 
+    public InputStream downloadFromTarget(BackupTarget target, String remotePath) throws Exception {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(target.getUsername(), target.getHost(), target.getPort());
+        session.setPassword(target.getCredentialsEnc());
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(10_000);
+
+        ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
+        sftp.connect();
+
+        return sftp.get(remotePath);
+    }
 
     private void ensureDirectory(ChannelSftp sftp, String directoryPath) throws SftpException {
         String[] path = directoryPath.split("/");

@@ -47,7 +47,7 @@ public class EncryptionService {
         }
     }
 
-    public String[] encryptToFile(InputStream input, Path output) {   // gibt {orig, enc} zurück
+    public String[] encryptToFile(InputStream input, Path output) {
         try {
             byte[] salt = new byte[SALT_LEN];
             byte[] iv = new byte[IV_LEN];
@@ -64,12 +64,11 @@ public class EncryptionService {
             MessageDigest shaEnc = MessageDigest.getInstance("SHA-256");  // Ciphertext
 
             DigestInputStream in = new DigestInputStream(input, shaOrig);
-            try (OutputStream out = Files.newOutputStream(output)) {
-                out.write(salt);   // Header roh -> NICHT in shaEnc
-                out.write(iv);
-                // cipher -> shaEnc (hasht die verschlüsselten Bytes) -> Datei
-                try (CipherOutputStream cipherOut =
-                             new CipherOutputStream(new DigestOutputStream(out, shaEnc), cipher)) {
+            try (OutputStream out = Files.newOutputStream(output); DigestOutputStream digestOut = new DigestOutputStream(out, shaEnc)) {
+                digestOut.write(salt);
+                digestOut.write(iv);
+
+                try (CipherOutputStream cipherOut = new CipherOutputStream(digestOut, cipher)) {
                     in.transferTo(cipherOut);
                 }
             }

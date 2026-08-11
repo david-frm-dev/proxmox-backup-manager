@@ -13,7 +13,6 @@ import java.util.UUID;
 public class JobLogService {
     private final StringRedisTemplate redisTemplate;
     public static final String CHANNEL_PREFIX = "logs:";
-    public static final String CHANNEL_PREFI2X = "logs:";
 
     public void publish(UUID jobId, String line) {
         redisTemplate.convertAndSend(CHANNEL_PREFIX + jobId, line);

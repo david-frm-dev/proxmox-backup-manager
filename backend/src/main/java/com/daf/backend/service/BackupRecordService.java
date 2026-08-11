@@ -6,15 +6,18 @@ import com.daf.backend.repository.BackupRecordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class BackupRecordService {
     private final BackupRecordRepository backupRecordRepository;
 
-    public BackupRecord findByJobId(UUID jobId) {
-        return backupRecordRepository.findByJobId(jobId).orElse(null);
+    public List<BackupRecord> findAll(String node, Integer vmid) {
+        if (node == null || vmid == null)
+            return backupRecordRepository.findAllByOrderByStartedAtDesc();
+
+        return backupRecordRepository.findByNodeAndVmidOrderByStartedAtDesc(node, vmid);
     }
 
     public BackupRecord save(BackupRecord backupRecord) {

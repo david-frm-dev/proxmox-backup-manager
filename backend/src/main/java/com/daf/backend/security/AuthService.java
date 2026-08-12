@@ -1,7 +1,7 @@
 package com.daf.backend.security;
 
 import com.daf.backend.model.User;
-import com.daf.backend.model.UserRole;
+import com.daf.backend.enums.UserRole;
 import com.daf.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;

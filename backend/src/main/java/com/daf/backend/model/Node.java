@@ -1,5 +1,6 @@
 package com.daf.backend.model;
 
+import com.daf.backend.enums.NodeStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;

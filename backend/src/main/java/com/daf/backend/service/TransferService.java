@@ -24,6 +24,7 @@ import java.nio.file.Path;
 @AllArgsConstructor
 public class TransferService {
     private final ProxmoxConnectionRepository connectionRepository;
+    private static final String DUMP_DIR = "/var/lib/vz/dump";
 
     /**
      * Downloads the VZDUMP File Proxmox-Machine
@@ -52,6 +53,37 @@ public class TransferService {
         sftp.connect();
 
         return sftp.get(remotePath);
+    }
+
+    public String uploadToProxmox(Path localPath, String fileName) throws Exception {
+        ProxmoxConnection connection = connectionRepository.findFirstBy().orElseThrow();
+        String host = connection.getSshIpAddress();
+        String user = connection.getSshUser();
+        int port = connection.getSshPort();
+        String password = new String(connection.getSshKeyEnc());
+
+        log.info("Upload to proxmox {}:{}:{}", host, user, port);
+
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(user, host, port);
+        session.setPassword(password);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(10_000);
+
+        ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
+
+        String remotePath = DUMP_DIR + "/" + fileName;
+
+        try (InputStream in = Files.newInputStream(localPath)) {
+            sftp.connect();
+            ensureDirectory(sftp, DUMP_DIR);
+            sftp.put(in, remotePath);
+        } finally {
+            sftp.disconnect();
+            session.disconnect();
+        }
+
+        return remotePath;
     }
 
     /**

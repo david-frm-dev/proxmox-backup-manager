@@ -26,4 +26,6 @@ public class ProxmoxConnectionController {
         return ResponseEntity.created(URI.create("/api/proxmox/connection"))
                 .body(proxmoxConnection);
     }
+
+
 }

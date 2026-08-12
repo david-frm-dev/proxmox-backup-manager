@@ -3,7 +3,7 @@ package com.daf.backend.service;
 import com.daf.backend.client.ProxmoxApiClient;
 import com.daf.backend.dto.NodeDto;
 import com.daf.backend.model.Node;
-import com.daf.backend.model.NodeStatus;
+import com.daf.backend.enums.NodeStatus;
 import com.daf.backend.repository.NodeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

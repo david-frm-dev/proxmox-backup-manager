@@ -1,8 +1,8 @@
 package com.daf.backend.dto;
 
-import com.daf.backend.model.BackupCompression;
-import com.daf.backend.model.DumpMode;
-import com.daf.backend.model.GuestType;
+import com.daf.backend.enums.BackupCompression;
+import com.daf.backend.enums.DumpMode;
+import com.daf.backend.enums.GuestType;
 import lombok.Data;
 
 import java.util.UUID;

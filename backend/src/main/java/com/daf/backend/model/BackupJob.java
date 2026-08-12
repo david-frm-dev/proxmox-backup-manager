@@ -1,5 +1,8 @@
 package com.daf.backend.model;
 
+import com.daf.backend.enums.BackupCompression;
+import com.daf.backend.enums.DumpMode;
+import com.daf.backend.enums.GuestType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;

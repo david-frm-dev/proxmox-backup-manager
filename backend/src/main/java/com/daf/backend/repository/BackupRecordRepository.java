@@ -1,7 +1,7 @@
 package com.daf.backend.repository;
 
 import com.daf.backend.model.BackupRecord;
-import com.daf.backend.model.BackupStatus;
+import com.daf.backend.enums.BackupStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

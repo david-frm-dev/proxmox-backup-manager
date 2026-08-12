@@ -1,6 +1,6 @@
 package com.daf.backend.dto;
 
-import com.daf.backend.model.TargetType;
+import com.daf.backend.enums.TargetType;
 import lombok.Data;
 
 @Data

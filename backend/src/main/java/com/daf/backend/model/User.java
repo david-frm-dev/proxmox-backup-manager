@@ -1,9 +1,8 @@
 package com.daf.backend.model;
 
+import com.daf.backend.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.UUID;

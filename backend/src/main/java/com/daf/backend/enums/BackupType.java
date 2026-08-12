@@ -1,4 +1,4 @@
-package com.daf.backend.model;
+package com.daf.backend.enums;
 
 public enum BackupType {
     GUEST, // vzdump

@@ -1,7 +1,10 @@
 package com.daf.backend.controller;
 
+import com.daf.backend.dto.RestoreRequestDto;
 import com.daf.backend.model.BackupRecord;
+import com.daf.backend.model.RestoreJob;
 import com.daf.backend.service.BackupRecordService;
+import com.daf.backend.service.RestoreService;
 import com.daf.backend.service.VerificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import java.util.UUID;
 public class BackupRecordController {
     private final BackupRecordService service;
     private final VerificationService verificationService;
+    private final RestoreService restoreService;
 
     @GetMapping()
     public ResponseEntity<List<BackupRecord>> findAll(@RequestParam(required = false) String node, @RequestParam(required = false) Integer vmid) {
@@ -25,5 +29,11 @@ public class BackupRecordController {
     @PostMapping("/{id}/verify")
     public ResponseEntity<BackupRecord> verify(@PathVariable UUID id) throws Exception {
         return ResponseEntity.ok(verificationService.verify(id));
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<RestoreJob> restore(@PathVariable UUID id, @RequestBody RestoreRequestDto dto) {
+        RestoreJob job = restoreService.startRestore(id, dto);
+        return ResponseEntity.accepted().body(job);
     }
 }

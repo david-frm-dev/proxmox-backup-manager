@@ -1,10 +1,9 @@
 package com.daf.backend.client;
 
 import com.daf.backend.dto.NodeDto;
-import com.daf.backend.model.BackupCompression;
+import com.daf.backend.enums.BackupCompression;
 import com.daf.backend.model.ProxmoxConnection;
 import com.daf.backend.repository.ProxmoxConnectionRepository;
-import jakarta.servlet.http.WebConnection;
 import lombok.AllArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -130,12 +129,42 @@ public class ProxmoxApiClient {
                 .path();
     }
 
-    public void deleteBackup (String node, String storage, String volid) {
+    public void deleteBackup(String node, String storage, String volid) {
         buildConnection()
                 .delete()
                 .uri("/nodes/{node}/storage/{storage}/content/{volid}", node, storage, volid)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
+    }
+
+    public String stopLxc(String node, int vmid) {
+        return buildConnection()
+                .post()
+                .uri("/nodes/{node}/lxc/{vmid}/status/stop", node, vmid)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ProxmoxSingleResponse<String>>() {})
+                .block()
+                .data();
+    }
+
+    public String restoreLxc(String node, int vmid, String volid, boolean force, String storage) {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+
+        body.add("vmid", String.valueOf(vmid));
+        body.add("restore", "1");
+        body.add("ostemplate", volid);
+        body.add("force", force ? "1" : "0");
+        body.add("storage", storage);
+
+        return buildConnection()
+                .post()
+                .uri("/nodes/{node}/lxc", node)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(body))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ProxmoxSingleResponse<String>>() {})
+                .block()
+                .data();
     }
 }

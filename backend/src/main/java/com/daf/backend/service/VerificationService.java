@@ -2,7 +2,7 @@ package com.daf.backend.service;
 
 import com.daf.backend.model.BackupJob;
 import com.daf.backend.model.BackupRecord;
-import com.daf.backend.model.BackupStatus;
+import com.daf.backend.enums.BackupStatus;
 import com.daf.backend.model.BackupTarget;
 import com.daf.backend.repository.BackupJobRepository;
 import com.daf.backend.repository.BackupRecordRepository;

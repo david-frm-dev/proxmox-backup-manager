@@ -1,6 +1,7 @@
 package com.daf.backend.model;
 
 import com.daf.backend.converter.CryptoConverter;
+import com.daf.backend.enums.TargetType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;

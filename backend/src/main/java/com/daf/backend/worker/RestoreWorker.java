@@ -1,10 +1,9 @@
 package com.daf.backend.worker;
 
-import com.daf.backend.model.BackupJob;
-import com.daf.backend.enums.BackupType;
-import com.daf.backend.repository.BackupJobRepository;
-import com.daf.backend.service.BackupExecutor;
-import com.daf.backend.service.BackupQueueService;
+import com.daf.backend.model.RestoreJob;
+import com.daf.backend.repository.RestoreJobRepository;
+import com.daf.backend.service.RestoreExecutor;
+import com.daf.backend.service.RestoreQueueService;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +16,19 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class BackupWorker implements ApplicationRunner {
-    private final BackupQueueService queueService;
-    private final BackupJobRepository jobRepository;
-    private final BackupExecutor executor;
+public class RestoreWorker implements ApplicationRunner {
+    private final RestoreQueueService queueService;
+    private final RestoreJobRepository jobRepository;
+    private final RestoreExecutor executor;
 
     private volatile boolean running = true;
 
     @Override
     public void run(ApplicationArguments args) {
-        Thread worker = new Thread(this::loop, "backup-worker");
+        Thread worker = new Thread(this::loop, "restore-worker");
         worker.setDaemon(true);
         worker.start();
-        log.info("Backup worker started");
+        log.info("Restore worker started");
     }
 
     private void loop() {
@@ -38,10 +37,10 @@ public class BackupWorker implements ApplicationRunner {
                 String jobId = queueService.dequeue();
                 if (jobId == null) continue;
 
-                BackupJob job = jobRepository.findById(UUID.fromString(jobId)).orElseThrow();
-                executor.execute(job, BackupType.GUEST);
+                RestoreJob job = jobRepository.findById(UUID.fromString(jobId)).orElseThrow();
+                executor.execute(job);
             } catch (Exception e) {
-                log.error("Worker failed to process queue entry: {}", e.getMessage());
+                log.error("Restore worker failed to process queue entry: {}", e.getMessage());
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException err) {
@@ -50,7 +49,7 @@ public class BackupWorker implements ApplicationRunner {
                 }
             }
         }
-        log.info("Backup worker stopped");
+        log.info("Restore worker stopped");
     }
 
     @PreDestroy

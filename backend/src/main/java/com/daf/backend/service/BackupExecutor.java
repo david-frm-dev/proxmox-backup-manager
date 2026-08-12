@@ -1,6 +1,8 @@
 package com.daf.backend.service;
 
 import com.daf.backend.client.ProxmoxApiClient;
+import com.daf.backend.enums.BackupStatus;
+import com.daf.backend.enums.BackupType;
 import com.daf.backend.model.*;
 import com.daf.backend.repository.BackupJobRepository;
 import lombok.AllArgsConstructor;

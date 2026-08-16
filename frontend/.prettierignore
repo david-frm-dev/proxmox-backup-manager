@@ -5,3 +5,5 @@
 /.nx/workspace-data
 .angular
 /lib
+
+.nx/self-healing

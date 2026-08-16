@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { AuthControllerService, LoginRequest, LoginResponse } from '@lib';
+import { AuthControllerService, LoginRequest, LoginResponse } from '@lib/api';
 
 const TOKEN_KEY = 'pbm.token';
 

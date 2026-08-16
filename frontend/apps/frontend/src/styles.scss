@@ -1,3 +1,143 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+
+  @include mat.theme((
+    color: (
+      primary: mat.$orange-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: "Space Grotesk",
+    density: 0,
+  ));
+}
+
+:root {
+  --app-background: #0f172a;
+  --app-background-primary: #0B1120;
+  --app-surface: #1e293b;
+  --app-elevated: #293548;
+
+  --app-text-primary: #f1f5f9;
+  --app-text-secondary: #94a3b8;
+  --app-text-muted: #64748b;
+
+  --app-accent: #f97316;
+  --app-accent-hover: #ea6c0a;
+  --app-accent-subtle: #1c1007;
+  --app-on-accent: #1c1007;
+
+  --app-success: #22c55e;
+  --app-error: #ef4444;
+  --app-warning: #eab308;
+  --app-info: #3b82f6;
+
+  --app-border: #334155;
+  --app-border-strong: #475569;
+
+  color-scheme: dark;
+}
+
+@mixin light-theme {
+  --app-background: #f8fafc;
+  --app-background-primary: #EFF4FB;
+  --app-surface: #ffffff;
+  --app-elevated: #f1f5f9;
+
+  --app-text-primary: #0f172a;
+  --app-text-secondary: #475569;
+  --app-text-muted: #94a3b8;
+
+  --app-accent: #f97316;
+  --app-accent-hover: #ea6c0a;
+  --app-accent-subtle: #fff7ed;
+  --app-on-accent: #1c1007;
+
+  --app-success: #16a34a;
+  --app-error: #dc2626;
+  --app-warning: #ca8a04;
+  --app-info: #2563eb;
+
+  --app-border: #e2e8f0;
+  --app-border-strong: #cbd5e1;
+
+  color-scheme: light;
+}
+
+:root[data-theme='light'] {
+  @include light-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    @include light-theme;
+  }
+}
+
+:root {
+  @include mat.theme-overrides((
+    background: var(--app-background),
+    surface: var(--app-background),
+    surface-dim: var(--app-background),
+    surface-bright: var(--app-elevated),
+    surface-container-lowest: var(--app-background),
+    surface-container-low: var(--app-surface),
+    surface-container: var(--app-surface),
+    surface-container-high: var(--app-elevated),
+    surface-container-highest: var(--app-elevated),
+    surface-variant: var(--app-elevated),
+
+    on-background: var(--app-text-primary),
+    on-surface: var(--app-text-primary),
+    on-surface-variant: var(--app-text-secondary),
+
+    primary: var(--app-accent),
+    on-primary: var(--app-on-accent),
+    primary-container: var(--app-accent-subtle),
+    on-primary-container: var(--app-accent),
+    inverse-primary: var(--app-accent),
+
+    secondary: var(--app-text-secondary),
+    on-secondary: var(--app-background),
+    secondary-container: var(--app-elevated),
+    on-secondary-container: var(--app-text-primary),
+    tertiary: var(--app-info),
+    on-tertiary: #ffffff,
+    tertiary-container: var(--app-elevated),
+    on-tertiary-container: var(--app-info),
+
+    error: var(--app-error),
+    on-error: #ffffff,
+    error-container: var(--app-elevated),
+    on-error-container: var(--app-error),
+
+    outline: var(--app-border-strong),
+    outline-variant: var(--app-border),
+
+    inverse-surface: var(--app-text-primary),
+    inverse-on-surface: var(--app-background),
+    surface-tint: var(--app-accent),
+  ));
+}
+
 body {
-  font-family: "Roboto", sans-serif;
+  height: 100%;
+  background-color: var(--app-background);
+  color: var(--app-text-primary);
+
+  font: var(--mat-sys-body-medium);
+  font-size: large;
+
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: xx-large;
+}
+
+sub {
+  font-size: small;
+  color: var(--app-text-muted)
 }

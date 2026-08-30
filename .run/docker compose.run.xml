@@ -3,6 +3,13 @@
     <deployment type="docker-compose.yml">
       <settings>
         <option name="commandLineOptions" value="--build" />
+        <option name="services">
+          <list>
+            <option value="backend" />
+            <option value="postgres" />
+            <option value="redis" />
+          </list>
+        </option>
         <option name="sourceFilePath" value="docker-compose.yml" />
         <option name="upForceRecreate" value="true" />
         <option name="upRemoveOrphans" value="true" />

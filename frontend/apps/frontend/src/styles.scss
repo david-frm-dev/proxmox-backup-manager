@@ -1,143 +1,198 @@
 @use '@angular/material' as mat;
+@import "tailwindcss";
 
-html {
-  height: 100%;
+@theme {
+  --font-sans: 'Space Grotesk', sans-serif;
 
-  @include mat.theme((
-    color: (
-      primary: mat.$orange-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: "Space Grotesk",
-    density: 0,
-  ));
+  --color-app-bg: var(--app-background);
+  --color-app-bg-primary: var(--app-background-primary);
+  --color-app-surface: var(--app-surface);
+  --color-app-elevated: var(--app-elevated);
+
+  --color-app-text: var(--app-text-primary);
+  --color-app-text-secondary: var(--app-text-secondary);
+  --color-app-text-muted: var(--app-text-muted);
+
+  --color-app-accent: var(--app-accent);
+  --color-app-accent-hover: var(--app-accent-hover);
+  --color-app-accent-subtle: var(--app-accent-subtle);
+
+  --color-app-border: var(--app-border);
+  --color-app-border-strong: var(--app-border-strong);
 }
 
-:root {
-  --app-background: #0f172a;
-  --app-background-primary: #0B1120;
-  --app-surface: #1e293b;
-  --app-elevated: #293548;
+@layer base {
+  :root {
+    --app-background: #0f172a;
+    --app-background-primary: #0B1120;
+    --app-surface: #1e293b;
+    --app-elevated: #293548;
 
-  --app-text-primary: #f1f5f9;
-  --app-text-secondary: #94a3b8;
-  --app-text-muted: #64748b;
+    --app-text-primary: #f1f5f9;
+    --app-text-secondary: #94a3b8;
+    --app-text-muted: #64748b;
 
-  --app-accent: #f97316;
-  --app-accent-hover: #ea6c0a;
-  --app-accent-subtle: #1c1007;
-  --app-on-accent: #1c1007;
+    --app-accent: #f97316;
+    --app-accent-hover: #ea6c0a;
+    --app-accent-subtle: #1c1007;
+    --app-on-accent: #1c1007;
 
-  --app-success: #22c55e;
-  --app-error: #ef4444;
-  --app-warning: #eab308;
-  --app-info: #3b82f6;
+    --app-success: #22c55e;
+    --app-error: #ef4444;
+    --app-warning: #eab308;
+    --app-info: #3b82f6;
 
-  --app-border: #334155;
-  --app-border-strong: #475569;
+    --app-border: #334155;
+    --app-border-strong: #475569;
 
-  color-scheme: dark;
-}
+    color-scheme: dark;
+  }
 
-@mixin light-theme {
-  --app-background: #f8fafc;
-  --app-background-primary: #EFF4FB;
-  --app-surface: #ffffff;
-  --app-elevated: #f1f5f9;
+  :root[data-theme='light'] {
+    --app-background: #f8fafc;
+    --app-background-primary: #EFF4FB;
+    --app-surface: #ffffff;
+    --app-elevated: #f1f5f9;
 
-  --app-text-primary: #0f172a;
-  --app-text-secondary: #475569;
-  --app-text-muted: #94a3b8;
+    --app-text-primary: #0f172a;
+    --app-text-secondary: #475569;
+    --app-text-muted: #94a3b8;
 
-  --app-accent: #f97316;
-  --app-accent-hover: #ea6c0a;
-  --app-accent-subtle: #fff7ed;
-  --app-on-accent: #1c1007;
+    --app-accent: #f97316;
+    --app-accent-hover: #ea6c0a;
+    --app-accent-subtle: #fff7ed;
+    --app-on-accent: #1c1007;
 
-  --app-success: #16a34a;
-  --app-error: #dc2626;
-  --app-warning: #ca8a04;
-  --app-info: #2563eb;
+    --app-success: #16a34a;
+    --app-error: #dc2626;
+    --app-warning: #ca8a04;
+    --app-info: #2563eb;
 
-  --app-border: #e2e8f0;
-  --app-border-strong: #cbd5e1;
+    --app-border: #e2e8f0;
+    --app-border-strong: #cbd5e1;
 
-  color-scheme: light;
-}
-
-:root[data-theme='light'] {
-  @include light-theme;
+    color-scheme: light;
+  }
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
-    @include light-theme;
+    --app-background: #f8fafc;
+    --app-background-primary: #EFF4FB;
+    --app-surface: #ffffff;
+    --app-elevated: #f1f5f9;
+
+    --app-text-primary: #0f172a;
+    --app-text-secondary: #475569;
+    --app-text-muted: #94a3b8;
+
+    --app-accent: #f97316;
+    --app-accent-hover: #e56e12;
+    --app-accent-subtle: #fff7ed;
+    --app-on-accent: #1c1007;
+
+    --app-success: #16a34a;
+    --app-error: #dc2626;
+    --app-warning: #ca8a04;
+    --app-info: #2563eb;
+
+    --app-border: #e2e8f0;
+    --app-border-strong: #cbd5e1;
+
+    color-scheme: light;
   }
 }
 
-:root {
-  @include mat.theme-overrides((
-    background: var(--app-background),
-    surface: var(--app-background),
-    surface-dim: var(--app-background),
-    surface-bright: var(--app-elevated),
-    surface-container-lowest: var(--app-background),
-    surface-container-low: var(--app-surface),
-    surface-container: var(--app-surface),
-    surface-container-high: var(--app-elevated),
-    surface-container-highest: var(--app-elevated),
-    surface-variant: var(--app-elevated),
 
-    on-background: var(--app-text-primary),
-    on-surface: var(--app-text-primary),
-    on-surface-variant: var(--app-text-secondary),
 
-    primary: var(--app-accent),
-    on-primary: var(--app-on-accent),
-    primary-container: var(--app-accent-subtle),
-    on-primary-container: var(--app-accent),
-    inverse-primary: var(--app-accent),
-
-    secondary: var(--app-text-secondary),
-    on-secondary: var(--app-background),
-    secondary-container: var(--app-elevated),
-    on-secondary-container: var(--app-text-primary),
-    tertiary: var(--app-info),
-    on-tertiary: #ffffff,
-    tertiary-container: var(--app-elevated),
-    on-tertiary-container: var(--app-info),
-
-    error: var(--app-error),
-    on-error: #ffffff,
-    error-container: var(--app-elevated),
-    on-error-container: var(--app-error),
-
-    outline: var(--app-border-strong),
-    outline-variant: var(--app-border),
-
-    inverse-surface: var(--app-text-primary),
-    inverse-on-surface: var(--app-background),
-    surface-tint: var(--app-accent),
-  ));
-}
-
-body {
+html, body {
   height: 100%;
-  background-color: var(--app-background);
-  color: var(--app-text-primary);
-
-  font: var(--mat-sys-body-medium);
-  font-size: large;
-
   padding: 0;
   margin: 0;
+  /* Setzt Space Grotesk als globale Standardschriftart für HTML/Body */
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--app-background);
+  color: var(--app-text-primary);
+  font-size: large;
+
+  @include mat.form-field-overrides((
+    outlined-container-shape: 10px,
+    outlined-outline-color: var(--app-border),
+    outlined-hover-outline-color: var(--app-border-strong),
+    outlined-focus-outline-color: var(--app-accent),
+    outlined-label-text-color: var(--app-text-secondary),
+    outlined-focus-label-text-color: var(--app-accent),
+    outlined-input-text-color: var(--app-text-primary),
+    outlined-input-text-placeholder-color: var(--app-text-muted),
+    outlined-caret-color: var(--app-accent),
+    outlined-error-outline-color: var(--app-error),
+    outlined-error-label-text-color: var(--app-error),
+    error-text-color: var(--app-error),
+    leading-icon-color: var(--app-text-secondary),
+    container-height: 56px,
+  ));
+
+  @include mat.card-overrides((
+    elevated-container-color: var(--app-surface),
+    elevated-container-shape: 20px,
+    elevated-container-elevation: none,
+    outlined-outline-color: var(--app-border),
+    subtitle-text-color: var(--app-text-secondary),
+    title-text-size: x-large,
+    subtitle-text-size: small,
+  ));
+
+  @include mat.button-overrides((
+    filled-container-color: var(--app-accent),
+    filled-label-text-color: #ffffff,
+    filled-container-shape: 10px,
+    filled-container-height: 52px,
+    filled-horizontal-padding: 24px,
+    filled-label-text-weight: 600,
+    filled-disabled-container-color: var(--app-elevated),
+    filled-disabled-label-text-color: var(--app-text-muted),
+    filled-state-layer-color: var(--app-accent-hover),
+
+    text-label-text-color: var(--app-accent),
+    text-state-layer-color: var(--app-accent),
+    outlined-label-text-color: var(--app-text-primary),
+    outlined-outline-color: var(--app-border),
+    outlined-container-shape: 10px,
+  ));
+
+  //MatMiniFab
+  @include mat.fab-overrides((
+    small-container-color: var(--app-elevated),
+    small-container-shape: 10px
+  ))
 }
 
+.mat-mdc-form-field-appearance-outline .mat-mdc-text-field-wrapper {
+  background-color: var(--app-background-primary);
+  border-radius: 10px;
+}
+
+.mat-mdc-card-title { color: var(--app-text-primary); }
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--app-text-primary);
+  caret-color: var(--app-text-primary);
+  transition: background-color 100000s ease-in-out 0s;
+}
+
+
 h1 {
-  font-size: xx-large;
+  font-size: x-large;
+  font-weight: bolder;
 }
 
 sub {
   font-size: small;
-  color: var(--app-text-muted)
+  color: var(--app-text-muted);
+}
+
+p {
+  font-size: smaller;
+  font-weight: lighter;
+  color: var(--app-text-secondary);
 }

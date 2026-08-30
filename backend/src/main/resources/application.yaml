@@ -7,13 +7,13 @@ spring:
     driver-class-name: org.postgresql.Driver
     password: "${POSTGRES_PASSWORD}"
     username: "${POSTGRES_USER}"
-    url: "jdbc:postgresql://localhost:5432/${POSTGRES_DB}"
+    url: "jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}"
 
   liquibase:
     enabled: true
     password: "${POSTGRES_PASSWORD}"
     user: "${POSTGRES_USER}"
-    url: "jdbc:postgresql://localhost:5432/${POSTGRES_DB}"
+    url: "jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}"
     change-log: "classpath:/db/db.changelog-master.xml"
 
   jpa:

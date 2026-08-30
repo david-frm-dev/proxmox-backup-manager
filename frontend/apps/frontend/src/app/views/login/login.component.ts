@@ -1,29 +1,19 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { MatDivider } from '@angular/material/list';
-import {
-  MatFormField,
-  MatInput,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/input';
+import { MatFormField, MatInput, MatLabel, MatPrefix, } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { MatButton, MatMiniFabButton } from "@angular/material/button";
 
 @Component({
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    MatDivider,
     MatLabel,
     MatPrefix,
     MatIcon,
@@ -31,15 +21,20 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatFormField,
     MatInput,
     MatCardContent,
+    MatCardHeader,
+    MatDivider,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatButton,
+    MatMiniFabButton,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrls: ['./login.component.scss'],
+  styles: '',
 })
 export class LoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   public readonly theme = inject(ThemeService);
 
@@ -59,9 +54,7 @@ export class LoginComponent {
 
     this.auth.login(this.form.getRawValue()).subscribe({
       next: () => {
-        const redirect =
-          this.route.snapshot.queryParamMap.get('redirect') ?? '/';
-        this.router.navigateByUrl(redirect);
+        this.router.navigateByUrl("/dashboard");
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);

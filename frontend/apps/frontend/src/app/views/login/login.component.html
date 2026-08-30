@@ -1,47 +1,63 @@
-<div class="container">
-  <div style="display: flex; background-color: var(--app-background-primary)">
-    <div
-      style="display: flex; flex-direction: column; justify-content: center; align-items: start;  margin-inline: 3rem; margin-bottom: 6rem;">
+<button matMiniFab class="fixed! top-4 right-4 z-50" (click)="theme.toggle()">
+  <mat-icon>dark_mode</mat-icon>
+</button>
+<div class="grid grid-cols-[45%_55%] h-full">
+  <div class="flex flex-col bg-app-bg-primary h-full p-8 gap-4 justify-center">
+    <div class="flex flex-col gap-3">
       <h1>Backup Manager for Proxmox VE</h1>
       <sub>Centralized backup, restore & desaster recovery for your Proxmox-Homelab</sub>
-      <mat-divider></mat-divider>
-      <div class="bulletPoints">
-        <mat-icon>circle</mat-icon>
-        <mat-label>DAS IST EIN TEST</mat-label>
+      <div class="w-24 border-b-5 border-b-app-accent border-solid rounded-2xl mt-4"></div>
+    </div>
+
+    <div class="flex gap-1.5 flex-col">
+      <div class="flex gap-2 items-center">
+        <mat-icon class="scale-35" style="color: var(--app-success)">circle</mat-icon>
+        <p>AES-256-GCM encrypted backups</p>
       </div>
-      <div class="bulletPoints">
-        <mat-icon>circle</mat-icon>
-        <mat-label>DAS IST EIN TEST</mat-label>
+
+      <div class="flex gap-2 items-center">
+        <mat-icon class="scale-35" style="color: var(--app-info)">circle</mat-icon>
+        <p>Automated SFTP / S3 offloading</p>
       </div>
-      <div class="bulletPoints">
-        <mat-icon>circle</mat-icon>
-        <mat-label>DAS IST EIN TEST</mat-label>
+
+      <div class="flex gap-2 items-center">
+        <mat-icon class="scale-35" style="color: var(--app-accent)">circle</mat-icon>
+        <p>Simple to use UI</p>
       </div>
-      <div class="bulletPoints">
-        <mat-icon>circle</mat-icon>
-        <mat-label>DAS IST EIN TEST</mat-label>
+
+      <div class="flex gap-2 items-center">
+        <mat-icon class="scale-35" style="color: #A855F7">circle</mat-icon>
+        <p>One-command disaster recovery</p>
       </div>
     </div>
   </div>
 
-  <div style="display: flex;">
-    <form [formGroup]="form">
-      <mat-card appearance="outlined" class="cardContainer">
-        <mat-card-content style=" width: 100%; display: flex; flex-direction: column; align-items: center ; justify-content: center; padding: 48px;">
-          <mat-form-field appearance="outline">
+  <div class="flex justify-center items-center">
+    <mat-card class="bg-app-surface rounded-t-2xl min-w-120 min-h-100">
+      <mat-card-header class="bg-app-surface rounded-t-2xl mb-4">
+        <mat-card-title>Welcome back!</mat-card-title>
+        <mat-card-subtitle>Sign in to Backup Manager for Proxmox VE</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="bg-app-surface rounded-b-2xl">
+        <mat-divider class="text-app-elevated!"></mat-divider>
+        <form [formGroup]="form" class="flex flex-col gap-3 pt-4">
+          <mat-form-field appearance="outline" floatLabel="always">
             <mat-label>Username</mat-label>
-            <mat-icon matPrefix>person</mat-icon>
-            <input matInput formControlName="username">
+            <mat-icon matIconPrefix>person</mat-icon>
+            <input matInput formControlName="username" placeholder="admin">
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" floatLabel="always">
             <mat-label>Password</mat-label>
-            <mat-icon matPrefix>lock</mat-icon>
-            <input matInput formControlName="password" type="password">
+            <mat-icon matIconPrefix>lock</mat-icon>
+            <input matInput type="password" formControlName="password" placeholder="· · · · · · ·">
           </mat-form-field>
 
-        </mat-card-content>
-      </mat-card>
-    </form>
+          <button matButton="filled" (click)="submit()">Sign In</button>
+
+          <a href="/signup" class="flex items-center text-app-accent pl-6 text-xs">First Time? Run Sign Up <mat-icon fontIcon="arrow_right_alt"></mat-icon></a>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

@@ -10,8 +10,9 @@ export const appRoutes: Route[] = [
     path: '',
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'nodes' },
+      { path: 'dashboard', loadComponent: () => import('./views/dashboard/dashboard.component').then((m) => m.DashboardComponent) },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

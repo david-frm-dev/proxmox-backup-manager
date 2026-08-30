@@ -1,0 +1,86 @@
+<mat-sidenav-container class="h-screen" autosize>
+
+  <mat-sidenav mode="side" opened disableClose
+               [style.width.px]="collapsed() ? 72 : 260"
+               class="bg-app-bg-primary! border-r! border-app-border! overflow-x-hidden!
+           transition-[width] duration-200 ease-out">
+
+    <div class="flex h-full flex-col">
+      <div class="flex h-16 shrink-0 items-center border-b border-app-border"
+           [class]="collapsed() ? 'justify-center' : 'justify-between pl-5 pr-3'">
+        @if (!collapsed()) {
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="font-semibold text-app-text">BMP</span>
+          </div>
+        }
+        <button type="button" (click)="toggle()"
+                [matTooltip]="collapsed() ? 'Menü ausklappen' : ''" matTooltipPosition="right"
+                class="grid size-10 place-items-center rounded-lg text-app-text-secondary
+                 hover:bg-app-elevated hover:text-app-text transition">
+          <mat-icon>{{ collapsed() ? 'menu' : 'menu_open' }}</mat-icon>
+        </button>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto overflow-x-hidden py-1">
+        @for (item of nav; track item.label) {
+
+          @if (item.children) {
+            <button type="button"
+                    (click)="collapsed() ? toggle() : openGroup.set(openGroup() === item.label ? null : item.label)"
+                    [matTooltip]="collapsed() ? item.label : ''" matTooltipPosition="right"
+                    class="flex h-12 w-full items-center border-l-2 border-transparent
+                     text-app-text-secondary hover:bg-app-elevated hover:text-app-text transition"
+                    [class]="collapsed() ? 'justify-center' : 'gap-4 pl-5 pr-3'">
+              <mat-icon class="shrink-0">{{ item.icon }}</mat-icon>
+              @if (!collapsed()) {
+                <span class="flex-1 whitespace-nowrap text-left text-sm">{{ item.label }}</span>
+                <mat-icon class="shrink-0 text-app-text-muted transition-transform"
+                          [class.rotate-90]="openGroup() === item.label">chevron_right</mat-icon>
+              }
+            </button>
+
+            @if (!collapsed() && openGroup() === item.label) {
+              @for (child of item.children; track child.link) {
+                <a [routerLink]="child.link" routerLinkActive="text-app-accent!"
+                   class="flex h-10 items-center gap-4 pl-14 text-sm text-app-text-secondary
+                         hover:bg-app-elevated hover:text-app-text transition">
+                  {{ child.label }}
+                </a>
+              }
+            }
+
+          } @else {
+            <a [routerLink]="item.link"
+               routerLinkActive="bg-app-elevated! text-app-accent! border-l-app-accent!"
+               [matTooltip]="collapsed() ? item.label : ''" matTooltipPosition="right"
+               class="flex h-12 items-center border-l-2 border-transparent
+                     text-app-text-secondary hover:bg-app-elevated hover:text-app-text transition"
+               [class]="collapsed() ? 'justify-center' : 'gap-4 pl-5 pr-3'">
+              <mat-icon class="shrink-0">{{ item.icon }}</mat-icon>
+              @if (!collapsed()) {
+                <span class="whitespace-nowrap text-sm">{{ item.label }}</span>
+              }
+            </a>
+          }
+        }
+      </nav>
+
+      <div class="shrink-0 border-t border-app-border p-4 text-center">
+        @if (!collapsed()) {
+          <div class="flex flex-row items-center gap-2 bg-app-bg p-4 rounded-2xl border-app-surface border-2">
+            <mat-icon>account_circle</mat-icon>
+            <p class="font-bold!">{{ authService.username() }}</p>
+          </div>
+
+          <sub class="text-xs whitespace-nowrap">Backup Manager · v1.0.0</sub>
+        } @else {
+          <mat-icon>account_circle</mat-icon>
+        }
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="bg-app-bg">
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>

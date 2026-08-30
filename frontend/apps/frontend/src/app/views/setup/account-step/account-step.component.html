@@ -1,0 +1,6 @@
+<app-setup-layout [current]="1">
+  <h2>Connect to Proxmox</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <button matButton="filled" type="submit" [disabled]="form.invalid">Next</button>
+  </form>
+</app-setup-layout>

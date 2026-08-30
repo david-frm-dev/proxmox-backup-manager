@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { AuthControllerService, LoginRequest, LoginResponse } from '@lib/api';
 
 const TOKEN_KEY = 'pbm.token';
+type payloadType = { sub: string; roles: string; exp: number };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
   private readonly _token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
   readonly token = this._token.asReadonly();
   readonly isLoggedIn = computed(() => !this.isExpired(this._token()));
+  readonly username= computed(() => this.decodePayload(this.token())?.sub.toUpperCase() ?? '-');
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.api.login(credentials).pipe(
@@ -40,11 +42,13 @@ export class AuthService {
     return payload === null || payload.exp * 1000 <= Date.now();
   }
 
-  private decodePayload(token: string): { exp: number } | null {
+  private decodePayload(token: string | null): payloadType | null {
+    if (!token) return null;
     try {
       return JSON.parse(atob(token.split('.')[1]));
     } catch {
       return null;
     }
   }
+
 }

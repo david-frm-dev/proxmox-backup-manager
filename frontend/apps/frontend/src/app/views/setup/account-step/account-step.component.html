@@ -1,6 +1,26 @@
 <app-setup-layout [current]="1">
   <h2>Connect to Proxmox</h2>
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-2 gap-2 pt-4">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>E-Mail (optional)</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="always" class="col-span-2">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="always" class="col-span-2">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword">
+    </mat-form-field>
+
     <button matButton="filled" type="submit" [disabled]="form.invalid">Next</button>
   </form>
 </app-setup-layout>
